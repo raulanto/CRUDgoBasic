@@ -3,6 +3,7 @@ package main
 import (
 	//Para la pagina wed
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -32,8 +33,10 @@ type Empleado struct {
 }
 
 func main() {
-	http.HandleFunc("/login", Sesion)
+	http.HandleFunc("/login", login)
+	http.HandleFunc("/validar", Validar)
 	http.HandleFunc("/registro", Registro)
+	http.HandleFunc("/insertarRegistro", InsertarRegistro)
 	http.HandleFunc("/", Inicio)
 	http.HandleFunc("/crear", Crear)
 	http.HandleFunc("/insertar", Insertar)
@@ -43,23 +46,48 @@ func main() {
 	log.Print("Servidor Corriendo..")
 	http.ListenAndServe(":5500", nil)
 }
-func Sesion(w http.ResponseWriter, r *http.Request) {
-
+func login(w http.ResponseWriter, r *http.Request) {
+	plantillas.ExecuteTemplate(w, "login", nil)
 }
 func Registro(w http.ResponseWriter, r *http.Request) {
+	plantillas.ExecuteTemplate(w, "registro", nil)
+}
+func Validar(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		usuario := r.FormValue("usuario")
+		contraseña := r.FormValue("contraseña")
+		conexionEstablecida := conexionDB()
+		buscarUsuario, err := conexionEstablecida.Query("SELECT usuario.usuario,usuario.`contraseña` FROM usuario WHERE usuario=? && `contraseña`=?", usuario, contraseña)
+		if err != nil {
+			panic(err.Error())
+		}
+		for buscarUsuario.Next() {
+			var usuarioquery, contraquery string
+			err := buscarUsuario.Scan(&usuarioquery, &contraquery)
+			if err != nil {
+				panic(err.Error())
+			}
+			if usuario == usuarioquery && contraseña == contraquery {
+				http.Redirect(w, r, "/", 301)
+			} else {
+				fmt.Println("usuario no encontrado")
+			}
+		}
+	}
+}
+func InsertarRegistro(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		nombre := r.FormValue("nombre")
 		correo := r.FormValue("correo")
 		usuario := r.FormValue("usuario")
-		contraseña := r.FormValue("coontraseña")
+		contraseña := r.FormValue("contraseña")
 		conexionEstablecida := conexionDB()
-		insertarRegistro, err := conexionEstablecida.Prepare("INSERT INTO usuario (nombre,correo,usuario,contraseña) VALUES (?,?,?,?)")
+		insertarUsuario, err := conexionEstablecida.Prepare("INSERT INTO usuario (nombre,correo,usuario,contraseña) VALUES (?,?,?,?)")
 		if err != nil {
 			panic(err.Error())
 		}
-		insertarRegistro.Exec(nombre, correo, usuario, contraseña)
-		http.Redirect(w, r, "/login", 301)
-		//defer conexionEstablecida.Close()
+		insertarUsuario.Exec(nombre, correo, usuario, contraseña)
+		plantillas.ExecuteTemplate(w, "login", nil)
 	}
 }
 

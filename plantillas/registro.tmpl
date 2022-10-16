@@ -1,40 +1,51 @@
 {{define "registro"}}
-{{template "cabecera"}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Registro</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<div class="card">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+     <div class="container">
+    <div class="card">
     
-    <div class="card-header">Empleados</div>
-    <div class="card-body">
-       <form method="post" action="/registro">
-            <div class="form-group">
-              <label for="">Nombre:</label>
-              <input type="text"
-                class="form-control" name="nombre" id="nombre" aria-describedby="helpId" placeholder="">
-              <small id="helpId" class="form-text text-muted">Esscribe tu nombre</small>
-            </div>
-            <div class="form-group">
-              <label for="">Correo:</label>
-              <input type="email" class="form-control" name="correo" id="correo" aria-describedby="emailHelpId" placeholder="">
-              <small id="emailHelpId" class="form-text text-muted">Correo</small>
-            </div>
-            <div class="form-group">
-                <label for="">Usuario:</label>
+      <div class="card-header">Registro Usuario</div>
+      <div class="card-body">
+         <form method="post" action="/registro">
+              <div class="form-group">
+                <label for="">Nombre:</label>
                 <input type="text"
-                  class="form-control" name="usuario" id="usuario" aria-describedby="helpId" placeholder="">
-                <small id="helpId" class="form-text text-muted">Escribe tu nombre de usuario</small>
+                  class="form-control" name="nombre" id="nombre" aria-describedby="helpId" placeholder="Escribe tu nombre">
+                <small id="helpId" class="form-text text-muted"></small>
               </div>
-            <div class="form-group">
-                <label for="">Contraseña:</label>
-                <input type="text"
-                  class="form-control" name="contraseña" id="contraseña" aria-describedby="helpId" placeholder="">
-                <small id="helpId" class="form-text text-muted">Escribe tu contraseña</small>
-            </div>
-            <button type="submit" class="btn btn-success">Registro</button>
-            <a name="" id="" class="btn btn-primary" href="login" role="button">Cancelar</a>
-       </form>
-    </div>
-
-</div>
-
-{{template "pie"}}
+              <div class="form-group">
+                <label for="">Correo:</label>
+                <input type="email" class="form-control" name="correo" id="correo" aria-describedby="emailHelpId" placeholder="Correo">
+                <small id="emailHelpId" class="form-text text-muted">Correo</small>
+              </div>
+              <div class="form-group">
+                  <label for="">Usuario:</label>
+                  <input type="text"
+                    class="form-control" name="usuario" id="usuario" aria-describedby="helpId" placeholder="Escribe tu nombre de usuario">
+                  <small id="helpId" class="form-text text-muted"></small>
+                </div>
+              <div class="form-group">
+                  <label for="">Contraseña:</label>
+                  <input type="text"
+                    class="form-control" name="contraseña" id="contraseña" aria-describedby="helpId" placeholder="Escribe tu contraseña">
+                  <small id="helpId" class="form-text text-muted"></small>
+              </div>
+              <button type="submit" class="btn btn-success">Registro</button>
+              <a name="" id="" class="btn btn-primary" href="login" role="button">Cancelar</a>
+         </form>
+      </div>
+  
+  </div>
+  </body>
+</html>
 {{end}}
