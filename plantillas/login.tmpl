@@ -18,7 +18,7 @@
             <div class="text-center mb-5 text-dark">Sistema Administrativo</div>
             <div class="card my-5">
     
-              <form class="card-body cardbody-color p-lg-5">
+              <form class="card-body cardbody-color p-lg-5" method="post" action="/validar">
     
                 <div class="text-center">
                   <img src="https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295397__340.png" class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3"
@@ -26,13 +26,13 @@
                 </div>
     
                 <div class="mb-3">
-                  <input type="text" class="form-control" id="Username" aria-describedby="emailHelp"
+                  <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="emailHelp"
                     placeholder="Usuario">
                 </div>
                 <div class="mb-3">
-                  <input type="password" class="form-control" id="password" placeholder="contraseña">
+                  <input type="password" class="form-control" id="contraseña" nombre="contraseña" placeholder="contraseña">
                 </div>
-                <div class="text-center"><a name="inicio id="inicio" class="btn btn-primary" href="/" role="button">Iniciar</a></div>
+                <div class="text-center"><a name="inicio id="inicio" class="btn btn-primary" href="" role="button">Iniciar</a></div>
                 <div id="emailHelp" class="form-text text-center mb-5 text-dark">No esta registrado?
                   <a href="/registro" class="text-dark fw-bold"> Crear una cuenta</a>
                 </div>
