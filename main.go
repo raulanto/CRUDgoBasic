@@ -3,16 +3,15 @@ package main
 import (
 	//Para la pagina wed
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
-
 	//buscar registros o plantillas atravez de carpetas
 	"text/template"
 	//drivers
 	//funcion para conexion de la base de datos
 
 	_ "github.com/go-sql-driver/mysql"
+
 )
 
 func conexionDB() *sql.DB {
@@ -20,7 +19,6 @@ func conexionDB() *sql.DB {
 	if err != nil {
 		panic(err.Error())
 	}
-	//defer conexion.Close()
 	return conexion
 }
 
@@ -53,28 +51,34 @@ func Registro(w http.ResponseWriter, r *http.Request) {
 	plantillas.ExecuteTemplate(w, "registro", nil)
 }
 func Validar(w http.ResponseWriter, r *http.Request) {
+	log.Println("Inicio validar")
 	if r.Method == "POST" {
-		usuario := r.FormValue("usuario")
-		contraseña := r.FormValue("contraseña")
-		conexionEstablecida := conexionDB()
-		buscarUsuario, err := conexionEstablecida.Query("SELECT usuario.usuario,usuario.`contraseña` FROM usuario WHERE usuario=? && `contraseña`=?", usuario, contraseña)
+		log.Println("Inicio Post")
+		//r.ParseForm()
+		user := r.FormValue("nombre")
+		password := r.FormValue("password")
+		log.Println(user)
+		log.Println(password)
+		/*conexionEstablecida := conexionDB()
+		rows, err := conexionEstablecida.Query("SELECT  user , password FROM usuario WHERE user=? AND password=?",user,password)
+		
 		if err != nil {
 			panic(err.Error())
-		}
-		for buscarUsuario.Next() {
-			var usuarioquery, contraquery string
-			err := buscarUsuario.Scan(&usuarioquery, &contraquery)
-			if err != nil {
-				panic(err.Error())
-			}
-			if usuario == usuarioquery && contraseña == contraquery {
-				http.Redirect(w, r, "/", 301)
-			} else {
-				fmt.Println("usuario no encontrado")
-			}
-		}
+		}*/
+		//log.Print(buscarUsuario)
+		/*if buscarUsuario.Next(){
+			log.Println("Correcto")
+			http.Redirect(w, r, "/", 202)	
+			return
+		}else{			
+			log.Println("mal")
+			http.Redirect(w, r, "/login", 202)	
+			return
+		}*/
+		//log.Println(rows.Next())
 	}
 }
+
 func InsertarRegistro(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		nombre := r.FormValue("nombre")
@@ -100,7 +104,6 @@ func Inicio(w http.ResponseWriter, r *http.Request) {
 	}
 	empleado := Empleado{}
 	AregloEmpleado := []Empleado{}
-
 	for registros.Next() {
 		var id int
 		var nombre, correo string
@@ -113,7 +116,6 @@ func Inicio(w http.ResponseWriter, r *http.Request) {
 		empleado.Nombre = nombre
 		empleado.Correo = correo
 		AregloEmpleado = append(AregloEmpleado, empleado)
-
 	}
 	//fmt.Println(AregloEmpleado)
 	plantillas.ExecuteTemplate(w, "Inicio", AregloEmpleado)
@@ -133,11 +135,8 @@ func Insertar(w http.ResponseWriter, r *http.Request) {
 		}
 		insertarRegistro.Exec(nombre, correo)
 		http.Redirect(w, r, "/", 301)
-		//defer conexionEstablecida.Close()
 	}
-
 }
-
 //funcion borrar un elemento de una lista
 func Borrar(w http.ResponseWriter, r *http.Request) {
 	//recepcion de datos
