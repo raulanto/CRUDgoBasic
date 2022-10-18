@@ -32,10 +32,10 @@ type Empleado struct {
 
 func main() {
 	http.HandleFunc("/login", login)
-	http.HandleFunc("/validar", Validar)
 	http.HandleFunc("/registro", Registro)
 	http.HandleFunc("/insertarRegistro", InsertarRegistro)
 	http.HandleFunc("/", Inicio)
+	http.HandleFunc("/validar", Validar)
 	http.HandleFunc("/crear", Crear)
 	http.HandleFunc("/insertar", Insertar)
 	http.HandleFunc("/borrar", Borrar)
@@ -51,31 +51,23 @@ func Registro(w http.ResponseWriter, r *http.Request) {
 	plantillas.ExecuteTemplate(w, "registro", nil)
 }
 func Validar(w http.ResponseWriter, r *http.Request) {
-	log.Println("Inicio validar")
 	if r.Method == "POST" {
-		log.Println("Inicio Post")
-		//r.ParseForm()
+	
 		user := r.FormValue("nombre")
-		password := r.FormValue("password")
-		log.Println(user)
-		log.Println(password)
-		/*conexionEstablecida := conexionDB()
+		password := r.FormValue("Password")
+		
+		conexionEstablecida := conexionDB()
 		rows, err := conexionEstablecida.Query("SELECT  user , password FROM usuario WHERE user=? AND password=?",user,password)
 		
 		if err != nil {
 			panic(err.Error())
-		}*/
-		//log.Print(buscarUsuario)
-		/*if buscarUsuario.Next(){
-			log.Println("Correcto")
-			http.Redirect(w, r, "/", 202)	
-			return
+		}
+		if rows.Next(){
+			http.Redirect(w, r, "/", 302)
 		}else{			
-			log.Println("mal")
-			http.Redirect(w, r, "/login", 202)	
-			return
-		}*/
-		//log.Println(rows.Next())
+			http.Redirect(w, r, "/login", 302)	
+		}
+		
 	}
 }
 
@@ -86,7 +78,7 @@ func InsertarRegistro(w http.ResponseWriter, r *http.Request) {
 		usuario := r.FormValue("usuario")
 		contraseña := r.FormValue("contraseña")
 		conexionEstablecida := conexionDB()
-		insertarUsuario, err := conexionEstablecida.Prepare("INSERT INTO usuario (nombre,correo,usuario,contraseña) VALUES (?,?,?,?)")
+		insertarUsuario, err := conexionEstablecida.Prepare("INSERT INTO usuario (nombre,correo,user,password) VALUES (?,?,?,?)")
 		if err != nil {
 			panic(err.Error())
 		}
@@ -117,7 +109,7 @@ func Inicio(w http.ResponseWriter, r *http.Request) {
 		empleado.Correo = correo
 		AregloEmpleado = append(AregloEmpleado, empleado)
 	}
-	//fmt.Println(AregloEmpleado)
+	
 	plantillas.ExecuteTemplate(w, "Inicio", AregloEmpleado)
 }
 func Crear(w http.ResponseWriter, r *http.Request) {
@@ -141,7 +133,7 @@ func Insertar(w http.ResponseWriter, r *http.Request) {
 func Borrar(w http.ResponseWriter, r *http.Request) {
 	//recepcion de datos
 	idEmpleado := r.URL.Query().Get("id")
-	//fmt.Println(idEmpleado)
+	
 	conexionEstablecida := conexionDB()
 	borrarRegistro, err := conexionEstablecida.Prepare("DELETE FROM empleado WHERE id=?")
 	if err != nil {
@@ -152,7 +144,7 @@ func Borrar(w http.ResponseWriter, r *http.Request) {
 }
 func Editar(w http.ResponseWriter, r *http.Request) {
 	idEmpleado := r.URL.Query().Get("id")
-	//fmt.Println(idEmpleado)
+	
 	conexionEstablecida := conexionDB()
 	registro, err := conexionEstablecida.Query("SELECT * FROM empleado WHERE id=?", idEmpleado)
 	if err != nil {
@@ -171,7 +163,7 @@ func Editar(w http.ResponseWriter, r *http.Request) {
 		empleado.Nombre = nombre
 		empleado.Correo = correo
 	}
-	//fmt.Println(empleado)
+	
 	plantillas.ExecuteTemplate(w, "editar", empleado)
 }
 func Actulizar(w http.ResponseWriter, r *http.Request) {
@@ -189,6 +181,5 @@ func Actulizar(w http.ResponseWriter, r *http.Request) {
 
 		modificarRegistro.Exec(nombre, correo, id)
 		http.Redirect(w, r, "/", 301)
-		//defer conexionEstablecida.Close()
 	}
 }
